@@ -93,12 +93,17 @@ function startNativeVoiceCommand(
 ): () => void {
   let stopped = false;
   let listening = false;
+  let retryTimer: number | null = null;
+  let permissionsRequested = false;
 
   const listen = async () => {
     if (stopped || listening) return;
     listening = true;
     try {
-      await SpeechRecognition.requestPermissions();
+      if (!permissionsRequested) {
+        await SpeechRecognition.requestPermissions();
+        permissionsRequested = true;
+      }
       const result = await SpeechRecognition.start({
         language: language || "en-IN",
         maxResults: 5,
@@ -109,15 +114,22 @@ function startNativeVoiceCommand(
         if (match.trim()) onCommand(match.trim());
       }
     } catch {
-      // Permission and recognizer failures are handled without retrying.
+      // Permission and recognizer failures are retried without interrupting the app.
     } finally {
       listening = false;
+      if (!stopped) {
+        retryTimer = window.setTimeout(() => {
+          retryTimer = null;
+          void listen();
+        }, 600);
+      }
     }
   };
 
   void listen();
   return () => {
     stopped = true;
+    if (retryTimer !== null) window.clearTimeout(retryTimer);
     if (listening) void SpeechRecognition.stop();
   };
 }
@@ -237,10 +249,10 @@ export function isNoCommand(value: string | null): boolean {
 
 export function isOpenScanCommand(value: string | null): boolean {
   if (!value) return false;
-  const text = value.toLowerCase();
-  return /\b(hey|hello|hi)\b/.test(text)
-    && /\b(scan|scanner|scanning)\b/.test(text)
-    && /\b(open|start|begin|currency|money)\b/.test(text);
+  const text = value.toLowerCase().replace(/[.,!?]/g, " ");
+  const asksToOpen = /\b(hey|hello|hi|open|start|begin)\b/.test(text);
+  const mentionsScan = /\b(scan|scanner|scanning|currency|money)\b/.test(text);
+  return asksToOpen && mentionsScan;
 }
 
 export function parseCurrencyCommand(value: string | null): CurrencyCode | null {

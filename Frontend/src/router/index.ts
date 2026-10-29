@@ -5,7 +5,6 @@ import routes from "./config";
 import { useVoice } from "@/context/VoiceProvider";
 import { useApp } from "@/context/AppProvider";
 import { isOpenScanCommand, startContinuousVoiceCommand } from "@/services/voice/voiceCommands";
-import { isNativeApp } from "@/services/platform";
 
 let navigateResolver: (navigate: ReturnType<typeof useNavigate>) => void;
 
@@ -21,14 +20,14 @@ export const navigatePromise = new Promise<NavigateFunction>((resolve) => {
 
 function GlobalVoiceNavigation() {
   const navigate = useNavigate();
-  const { stop } = useVoice();
+  const { stop, settings } = useVoice();
   const { isAuthenticated } = useApp();
 
   useEffect(() => {
-    if (!isAuthenticated || isNativeApp) return;
+    if (!isAuthenticated) return;
 
     let listening = true;
-    const stopListening = startContinuousVoiceCommand("en-IN", (command) => {
+    const stopListening = startContinuousVoiceCommand(settings.language || "en-IN", (command) => {
       if (listening && isOpenScanCommand(command)) {
         listening = false;
         stopListening();
@@ -41,7 +40,7 @@ function GlobalVoiceNavigation() {
       stopListening();
       stop();
     };
-  }, [isAuthenticated, navigate, stop]);
+  }, [isAuthenticated, navigate, settings.language, stop]);
 
   return null;
 }
