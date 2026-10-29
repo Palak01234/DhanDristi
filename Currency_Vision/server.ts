@@ -345,7 +345,10 @@ app.post("/api/inference", express.raw({ type: ["image/jpeg", "image/png", "appl
 
 async function startServer(): Promise<void> {
   try {
-    await mongoClient.connect();
+    await Promise.all([
+      mongoClient.connect(),
+      loadSession(),
+    ]);
     await Promise.all([
       users.createIndex({ email: 1 }, { unique: true }),
       history.createIndex({ email: 1, "record.createdAt": -1 }),
