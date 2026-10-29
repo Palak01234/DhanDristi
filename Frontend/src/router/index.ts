@@ -20,14 +20,14 @@ export const navigatePromise = new Promise<NavigateFunction>((resolve) => {
 
 function GlobalVoiceNavigation() {
   const navigate = useNavigate();
-  const { stop, settings } = useVoice();
+  const { stop } = useVoice();
   const { isAuthenticated } = useApp();
 
   useEffect(() => {
     if (!isAuthenticated) return;
 
     let listening = true;
-    const stopListening = startContinuousVoiceCommand(settings.language || "en-IN", (command) => {
+    const stopListening = startContinuousVoiceCommand("en-IN", (command) => {
       if (listening && isOpenScanCommand(command)) {
         listening = false;
         stopListening();
@@ -40,7 +40,7 @@ function GlobalVoiceNavigation() {
       stopListening();
       stop();
     };
-  }, [isAuthenticated, navigate, settings.language, stop]);
+  }, [isAuthenticated, navigate, stop]);
 
   return null;
 }
