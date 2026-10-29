@@ -95,41 +95,69 @@ function startNativeVoiceCommand(
   let listening = false;
   let retryTimer: number | null = null;
   let permissionsRequested = false;
+  let restartDelay = 1000;
+  let partialResultsHandle: { remove: () => Promise<void> } | null = null;
+  let listeningStateHandle: { remove: () => Promise<void> } | null = null;
+
+  const scheduleRestart = () => {
+    if (stopped || retryTimer !== null) return;
+    retryTimer = window.setTimeout(() => {
+      retryTimer = null;
+      void listen();
+    }, restartDelay);
+    restartDelay = Math.min(restartDelay * 2, 5000);
+  };
 
   const listen = async () => {
     if (stopped || listening) return;
     listening = true;
     try {
       if (!permissionsRequested) {
-        await SpeechRecognition.requestPermissions();
+        const permissions = await SpeechRecognition.requestPermissions();
+        if (permissions.speechRecognition === "denied") {
+          stopped = true;
+          return;
+        }
         permissionsRequested = true;
       }
-      const result = await SpeechRecognition.start({
+      await SpeechRecognition.start({
         language: language || "en-IN",
         maxResults: 5,
-        partialResults: false,
+        partialResults: true,
         popup: false,
       });
-      for (const match of result.matches ?? []) {
-        if (match.trim()) onCommand(match.trim());
-      }
+      restartDelay = 1000;
     } catch {
-      // Permission and recognizer failures are retried without interrupting the app.
+      scheduleRestart();
     } finally {
       listening = false;
-      if (!stopped) {
-        retryTimer = window.setTimeout(() => {
-          retryTimer = null;
-          void listen();
-        }, 600);
-      }
     }
   };
 
+  void SpeechRecognition.addListener("partialResults", (event) => {
+    for (const match of event.matches) {
+      const transcript = match.trim();
+      if (transcript) onCommand(transcript);
+    }
+  }).then((handle) => {
+    partialResultsHandle = handle;
+  });
+  void SpeechRecognition.addListener("listeningState", (event) => {
+    if (event.status === "started") {
+      restartDelay = 1000;
+    } else {
+      scheduleRestart();
+    }
+  }).then((handle) => {
+    listeningStateHandle = handle;
+  });
   void listen();
+
   return () => {
     stopped = true;
     if (retryTimer !== null) window.clearTimeout(retryTimer);
+    void partialResultsHandle?.remove();
+    void listeningStateHandle?.remove();
     if (listening) void SpeechRecognition.stop();
   };
 }
