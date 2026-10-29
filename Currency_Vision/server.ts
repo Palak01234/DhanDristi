@@ -343,4 +343,20 @@ app.post("/api/inference", express.raw({ type: ["image/jpeg", "image/png", "appl
   }
 });
 
-app.listen(port, () => console.log(`Currency model API listening on http://localhost:${port}`));
+async function startServer(): Promise<void> {
+  try {
+    await mongoClient.connect();
+    await Promise.all([
+      users.createIndex({ email: 1 }, { unique: true }),
+      history.createIndex({ email: 1, "record.createdAt": -1 }),
+    ]);
+    console.log("MongoDB connected and indexes are ready");
+  } catch (error) {
+    console.error("MongoDB startup connection failed:", error instanceof Error ? error.message : "unknown error");
+    console.warn("The API will start, but account and history requests may be unavailable until MongoDB recovers.");
+  }
+
+  app.listen(port, () => console.log(`Currency model API listening on http://localhost:${port}`));
+}
+
+void startServer();
