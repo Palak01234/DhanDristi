@@ -113,7 +113,11 @@ export default function Scanner() {
     }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 640, max: 640 },
+          height: { ideal: 480, max: 480 },
+        },
         audio: false,
       });
       streamRef.current = stream;
@@ -197,7 +201,7 @@ export default function Scanner() {
       if (video && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && !scanning) {
         void doScan(true);
       }
-    }, 1800);
+    }, 1000);
     return () => window.clearInterval(timer);
   }, [camState, doScan, preferences.autoScan, scanning]);
 

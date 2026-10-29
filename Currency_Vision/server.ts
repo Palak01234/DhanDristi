@@ -276,6 +276,7 @@ function loadSession() {
 }
 
 app.post("/api/inference", express.raw({ type: ["image/jpeg", "image/png", "application/octet-stream"], limit: "12mb" }), async (req, res) => {
+  const startedAt = performance.now();
   try {
     if (!Buffer.isBuffer(req.body) || req.body.length === 0) {
       res.status(400).json({ error: "An image body is required" });
@@ -334,7 +335,7 @@ app.post("/api/inference", express.raw({ type: ["image/jpeg", "image/png", "appl
       currencies: selected,
       total: selected.reduce((sum, note) => sum + note.denomination, 0),
       possibleReasons: resultConfidence < threshold ? ["Poor lighting", "Note at a sharp angle", "Partial or folded note"] : undefined,
-      elapsedMs: undefined,
+      elapsedMs: Math.round(performance.now() - startedAt),
     };
     res.json(result);
   } catch (error) {

@@ -7,6 +7,8 @@ export interface InferenceOutput {
 
 /** Sends a camera frame to the ONNX inference API and maps its response to the UI contract. */
 const MODEL_API_URL = (import.meta.env.VITE_MODEL_API_URL as string | undefined) || "";
+const CAPTURE_MAX_DIMENSION = 480;
+const JPEG_QUALITY = 0.65;
 
 export async function runInference(
   preferences: UserPreferences,
@@ -14,11 +16,11 @@ export async function runInference(
 ): Promise<InferenceOutput> {
   if (video && video.videoWidth > 0 && video.videoHeight > 0) {
     const canvas = document.createElement("canvas");
-    const scale = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight));
+    const scale = Math.min(1, CAPTURE_MAX_DIMENSION / Math.max(video.videoWidth, video.videoHeight));
     canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
     canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
     canvas.getContext("2d")?.drawImage(video, 0, 0);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.75));
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", JPEG_QUALITY));
     if (!blob) throw new Error("Could not capture a camera frame");
 
     const inferenceUrl = MODEL_API_URL
