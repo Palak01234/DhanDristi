@@ -5,6 +5,7 @@ import { BrandMark } from "@/components/base/BrandMark";
 import { useVoice } from "@/context/VoiceProvider";
 import { useApp } from "@/context/AppProvider";
 import { voiceMessage } from "@/services/voice/voiceMessages";
+import { isNativeApp } from "@/services/platform";
 
 let mediaPermissionRequest: Promise<void> | null = null;
 
@@ -41,6 +42,13 @@ export default function Splash() {
     }
     let cancelled = false;
     const playWelcomeAndContinue = async () => {
+      if (isNativeApp) {
+        if (!cancelled && !completedRef.current) {
+          completedRef.current = true;
+          navigate(isAuthenticated ? "/scan" : "/login");
+        }
+        return;
+      }
       await requestMediaPermissions();
       await speak(welcomeMessage, "confirmation", settings.language);
       if (!cancelled && !completedRef.current) {

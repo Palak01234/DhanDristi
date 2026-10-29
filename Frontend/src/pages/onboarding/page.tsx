@@ -14,6 +14,7 @@ import {
 import { useVoice } from "@/context/VoiceProvider";
 import { SUPPORTED_CURRENCIES } from "@/constants/currencies";
 import { onboardingMessage } from "@/services/voice/voiceMessages";
+import { isNativeApp } from "@/services/platform";
 
 interface Feature {
   id: string;
@@ -58,7 +59,7 @@ export default function Onboarding() {
   const isLast = step === total - 1;
 
   useEffect(() => {
-    if (settings.autoSpeak) {
+    if (settings.autoSpeak && !isNativeApp) {
       speak(onboardingMessage(current.id, settings.language), "normal", settings.language);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
