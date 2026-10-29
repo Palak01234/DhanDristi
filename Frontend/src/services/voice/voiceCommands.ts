@@ -1,5 +1,7 @@
 import type { CurrencyCode } from "@/constants/currencies";
 import { getTTSFunctionUrl } from "@/services/tts/config";
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
+import { isNativeApp } from "@/services/platform";
 
 interface SpeechRecognitionEventLike extends Event {
   results: ArrayLike<ArrayLike<{ transcript: string }>>;
@@ -27,6 +29,10 @@ export function startContinuousVoiceCommand(
   language: string,
   onCommand: (transcript: string) => void,
 ): () => void {
+  if (isNativeApp) {
+    return startNativeVoiceCommand(language, onCommand);
+  }
+
   const Recognition = (window as SpeechWindow).SpeechRecognition ?? (window as SpeechWindow).webkitSpeechRecognition;
   if (!Recognition) return () => undefined;
 
@@ -78,6 +84,49 @@ export function startContinuousVoiceCommand(
     stopped = true;
     if (restartTimer !== null) window.clearTimeout(restartTimer);
     recognition.stop();
+  };
+}
+
+function startNativeVoiceCommand(
+  language: string,
+  onCommand: (transcript: string) => void,
+): () => void {
+  let stopped = false;
+  let listening = false;
+  let retryTimer: number | null = null;
+
+  const listen = async () => {
+    if (stopped || listening) return;
+    listening = true;
+    try {
+      await SpeechRecognition.requestPermissions();
+      const result = await SpeechRecognition.start({
+        language: language || "en-IN",
+        maxResults: 5,
+        partialResults: false,
+        popup: false,
+      });
+      for (const match of result.matches ?? []) {
+        if (match.trim()) onCommand(match.trim());
+      }
+    } catch {
+      // Permission and recognizer failures are retried without interrupting the app.
+    } finally {
+      listening = false;
+      if (!stopped) {
+        retryTimer = window.setTimeout(() => {
+          retryTimer = null;
+          void listen();
+        }, 600);
+      }
+    }
+  };
+
+  void listen();
+  return () => {
+    stopped = true;
+    if (retryTimer !== null) window.clearTimeout(retryTimer);
+    if (listening) void SpeechRecognition.stop();
   };
 }
 
