@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ScanLine,
@@ -14,6 +14,7 @@ import {
   ShieldAlert,
   ShieldX,
   TrendingUp,
+  Mic,
   type LucideIcon,
 } from "lucide-react";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -23,6 +24,8 @@ import { useApp } from "@/context/AppProvider";
 import { useVoice } from "@/context/VoiceProvider";
 import { getCurrency, formatAmount } from "@/constants/currencies";
 import type { DetectionRecord, DetectionStatus } from "@/types";
+import { isOpenScanCommand, listenForVoiceCommand } from "@/services/voice/voiceCommands";
+import { isNativeApp } from "@/services/platform";
 
 // ─── Today’s Stats Banner ───────────────────────────────────────────────────
 
@@ -259,6 +262,7 @@ export default function Home() {
   const navigate = useNavigate();
   const { preferences, history } = useApp();
   const { settings } = useVoice();
+  const [listening, setListening] = useState(false);
 
   useEffect(() => {
     if (settings.vibration) {
@@ -277,6 +281,17 @@ export default function Home() {
       : preferences.detectionMode === "multiple"
         ? "Multiple"
         : "Automatic";
+
+  const listenForCommand = async () => {
+    if (listening) return;
+    setListening(true);
+    try {
+      const command = await listenForVoiceCommand(settings.language, 10000);
+      if (isOpenScanCommand(command)) navigate("/scan");
+    } finally {
+      setListening(false);
+    }
+  };
 
   return (
     <MainLayout>
@@ -335,6 +350,20 @@ export default function Home() {
                   <HistoryIcon aria-hidden="true" className="h-5 w-5" />
                   <span className="font-semibold">History</span>
                 </button>
+                {isNativeApp && (
+                  <button
+                    onClick={() => void listenForCommand()}
+                    aria-label="Listen for a voice command"
+                    className={`flex min-h-16 items-center justify-center gap-2 rounded-xl border px-5 py-4 transition-colors ${
+                      listening
+                        ? "border-accent-300 bg-accent-400/20 text-accent-100"
+                        : "border-background-50/20 bg-background-50/10 text-background-50 hover:bg-background-50/20"
+                    }`}
+                  >
+                    <Mic aria-hidden="true" className="h-5 w-5" />
+                    <span className="font-semibold">{listening ? "Listening…" : "Voice command"}</span>
+                  </button>
+                )}
               </div>
             </div>
           </section>

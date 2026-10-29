@@ -5,6 +5,7 @@ import routes from "./config";
 import { useVoice } from "@/context/VoiceProvider";
 import { useApp } from "@/context/AppProvider";
 import { isOpenScanCommand, startContinuousVoiceCommand } from "@/services/voice/voiceCommands";
+import { isNativeApp } from "@/services/platform";
 
 let navigateResolver: (navigate: ReturnType<typeof useNavigate>) => void;
 
@@ -24,7 +25,7 @@ function GlobalVoiceNavigation() {
   const { isAuthenticated } = useApp();
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || isNativeApp) return;
 
     let listening = true;
     const stopListening = startContinuousVoiceCommand("en-IN", (command) => {
