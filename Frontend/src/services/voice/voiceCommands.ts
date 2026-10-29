@@ -98,6 +98,25 @@ function startNativeVoiceCommand(
   let restartDelay = 1000;
   let partialResultsHandle: { remove: () => Promise<void> } | null = null;
   let listeningStateHandle: { remove: () => Promise<void> } | null = null;
+  let transcriptBuffer = "";
+  let transcriptTimer: number | null = null;
+
+  const handleNativeTranscript = (match: string) => {
+    const transcript = match.trim();
+    if (!transcript) return;
+    transcriptBuffer = `${transcriptBuffer} ${transcript}`.trim();
+    if (transcriptTimer !== null) window.clearTimeout(transcriptTimer);
+    transcriptTimer = window.setTimeout(() => {
+      transcriptBuffer = "";
+      transcriptTimer = null;
+    }, 3500);
+    onCommand(transcriptBuffer);
+    if (isOpenScanCommand(transcriptBuffer)) {
+      transcriptBuffer = "";
+      window.clearTimeout(transcriptTimer);
+      transcriptTimer = null;
+    }
+  };
 
   const scheduleRestart = () => {
     if (stopped || retryTimer !== null) return;
@@ -136,8 +155,7 @@ function startNativeVoiceCommand(
 
   void SpeechRecognition.addListener("partialResults", (event) => {
     for (const match of event.matches) {
-      const transcript = match.trim();
-      if (transcript) onCommand(transcript);
+      handleNativeTranscript(match);
     }
   }).then((handle) => {
     partialResultsHandle = handle;
@@ -156,6 +174,7 @@ function startNativeVoiceCommand(
   return () => {
     stopped = true;
     if (retryTimer !== null) window.clearTimeout(retryTimer);
+    if (transcriptTimer !== null) window.clearTimeout(transcriptTimer);
     void partialResultsHandle?.remove();
     void listeningStateHandle?.remove();
     if (listening) void SpeechRecognition.stop();
