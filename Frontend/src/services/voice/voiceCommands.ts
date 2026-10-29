@@ -93,7 +93,6 @@ function startNativeVoiceCommand(
 ): () => void {
   let stopped = false;
   let listening = false;
-  let retryTimer: number | null = null;
 
   const listen = async () => {
     if (stopped || listening) return;
@@ -110,22 +109,15 @@ function startNativeVoiceCommand(
         if (match.trim()) onCommand(match.trim());
       }
     } catch {
-      // Permission and recognizer failures are retried without interrupting the app.
+      // Permission and recognizer failures are handled without retrying.
     } finally {
       listening = false;
-      if (!stopped) {
-        retryTimer = window.setTimeout(() => {
-          retryTimer = null;
-          void listen();
-        }, 600);
-      }
     }
   };
 
   void listen();
   return () => {
     stopped = true;
-    if (retryTimer !== null) window.clearTimeout(retryTimer);
     if (listening) void SpeechRecognition.stop();
   };
 }
