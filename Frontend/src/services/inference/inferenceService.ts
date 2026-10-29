@@ -1,5 +1,7 @@
 import type { DetectionResult, UserPreferences } from "@/types";
 import { apiUrl } from "@/services/api";
+import { runLocalInference } from "./localInferenceService";
+import { isNativeApp } from "@/services/platform";
 
 export interface InferenceOutput {
   result: DetectionResult;
@@ -15,6 +17,13 @@ export async function runInference(
   video?: HTMLVideoElement,
 ): Promise<InferenceOutput> {
   if (video && video.videoWidth > 0 && video.videoHeight > 0) {
+    if (preferences.offlineModel || isNativeApp) {
+      try {
+        return { result: await runLocalInference(preferences, video) };
+      } catch {
+        if (isNativeApp) throw new Error("On-device recognition could not start");
+      }
+    }
     const canvas = document.createElement("canvas");
     const scale = Math.min(1, CAPTURE_MAX_DIMENSION / Math.max(video.videoWidth, video.videoHeight));
     canvas.width = Math.max(1, Math.round(video.videoWidth * scale));

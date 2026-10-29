@@ -26,6 +26,6 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
   },
   confidenceThreshold: 0.8,
   autoScan: true,
-  offlineModel: false,
+  offlineModel: true,
   exchangeRateData: "online",
 };
