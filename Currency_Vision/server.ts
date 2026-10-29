@@ -345,10 +345,9 @@ app.post("/api/inference", express.raw({ type: ["image/jpeg", "image/png", "appl
 
 async function startServer(): Promise<void> {
   try {
-    await Promise.all([
-      mongoClient.connect(),
-      loadSession(),
-    ]);
+    await loadSession();
+    console.log("ONNX model loaded and ready");
+    await mongoClient.connect();
     await Promise.all([
       users.createIndex({ email: 1 }, { unique: true }),
       history.createIndex({ email: 1, "record.createdAt": -1 }),

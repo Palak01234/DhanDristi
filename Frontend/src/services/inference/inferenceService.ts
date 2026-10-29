@@ -14,7 +14,7 @@ export async function runInference(
 ): Promise<InferenceOutput> {
   if (video && video.videoWidth > 0 && video.videoHeight > 0) {
     const canvas = document.createElement("canvas");
-    const scale = Math.min(1, 1280 / Math.max(video.videoWidth, video.videoHeight));
+    const scale = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight));
     canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
     canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
     canvas.getContext("2d")?.drawImage(video, 0, 0);
