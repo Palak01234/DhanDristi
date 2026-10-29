@@ -23,6 +23,7 @@ import { useApp } from "@/context/AppProvider";
 import { useVoice } from "@/context/VoiceProvider";
 import { getCurrency } from "@/constants/currencies";
 import { runInference } from "@/services/inference/inferenceService";
+import { apiUrl } from "@/services/api";
 import { buildResultSpeechForVoice } from "@/services/inference/resultSpeech";
 import { modeMessage, statusMessage, voiceMessage } from "@/services/voice/voiceMessages";
 import type { DetectionMode } from "@/types";
@@ -74,6 +75,7 @@ export default function Scanner() {
   );
 
   useEffect(() => {
+    void fetch(apiUrl("/health"), { cache: "no-store" }).catch(() => undefined);
     startCamera();
     return () => stopCamera();
     // eslint-disable-next-line react-hooks/exhaustive-deps
