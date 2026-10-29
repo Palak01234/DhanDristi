@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "onnxruntime-node": "^1.30.0",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "tsx": "^4.23.15"
+  }
+}

@@ -1,0 +1,35 @@
+# custom_model.yaml
+# YOLOv8s-SE: YOLOv8s backbone + Squeeze-and-Excitation in the neck
+nc: 36
+depth_multiple: 0.33
+width_multiple: 0.50
+
+# ----- backbone -----
+backbone:
+  # [from, number, module, args]
+  [[-1, 1, Conv, [64, 3, 2]],
+   [-1, 3, C2f, [64, True]],
+   [-1, 1, Conv, [128, 3, 2]],
+   [-1, 6, C2f, [128, True]],
+   [-1, 1, Conv, [256, 3, 2]],
+   [-1, 6, C2f, [256, True]],
+   [-1, 1, Conv, [512, 3, 2]],
+   [-1, 6, C2f, [512, True]],
+   [-1, 1, Conv, [1024, 3, 2]],
+   [-1, 3, C2f, [1024, True]],
+   [-1, 1, SPPF, [1024, 5]],
+   # insert SE after the SPPF
+   [-1, 1, SE, [512, 16]]]
+
+# ----- head -----
+head:
+  [[-1, 1, Conv, [256, 1, 1]],
+   [-1, 1, nn.Upsample, [None, 2, True]],
+   [[-1, 6], 1, Concat, [1]],
+   [-1, 3, C2f, [256, True]],
+   [-1, 1, nn.Upsample, [None, 2, True]],
+   [[-1, 4], 1, Concat, [1]],
+   [-1, 3, C2f, [256, True]],
+   [[17, 20, 23], 1, Detect, [nc, [3, 6, 9]]]]
+
+# Note: names are taken from dataset.yaml during training

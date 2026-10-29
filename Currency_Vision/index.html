@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Image detection demo for local object recognition in the browser"
+    />
+    <title>Vision Demo | Object Detector</title>
+  </head>
+  <body>
+    <div id="app">
+      <main class="app-shell">
+        <header class="topbar">
+          <div class="brand" aria-label="Project brand">
+            <span class="brand-mark">V</span>
+            <span>Vision Studio</span>
+          </div>
+          <span class="status-pill">Local inference</span>
+        </header>
+
+        <section id="detector" class="workspace" aria-labelledby="detector-title">
+          <aside class="panel sidebar">
+            <div class="panel-header">
+              <p class="eyebrow">Image detector</p>
+              <h1 id="detector-title">Upload a photo</h1>
+            </div>
+
+            <label id="dropzone" class="dropzone reticle" for="file-input">
+              <span class="reticle-corner tl"></span>
+              <span class="reticle-corner tr"></span>
+              <span class="reticle-corner bl"></span>
+              <span class="reticle-corner br"></span>
+              <span class="dropzone-label">Drop image or choose file</span>
+              <input id="file-input" type="file" accept="image/*" hidden />
+            </label>
+
+            <div class="samples">
+              
+              <div class="sample-list">
+ 
+              </div>
+            </div>
+
+            <div id="status-line" class="status-line" role="status">Choose an image to start detection.</div>
+          </aside>
+
+          <section class="panel preview-panel" aria-live="polite">
+            <div id="canvas-wrap" class="canvas-wrap reticle">
+              <span class="reticle-corner tl"></span>
+              <span class="reticle-corner tr"></span>
+              <span class="reticle-corner bl"></span>
+              <span class="reticle-corner br"></span>
+              <canvas id="result-canvas"></canvas>
+              <p id="canvas-empty" class="canvas-empty">No image selected</p>
+            </div>
+
+            <div id="results-panel" class="results-panel" hidden>
+              <table class="ledger">
+                <thead>
+                  <tr><th>Item</th><th>Count</th><th>Subtotal</th></tr>
+                </thead>
+                <tbody id="ledger-body"></tbody>
+              </table>
+
+              <div class="ledger-total-row">
+                <label for="currency-select">Convert to</label>
+                <select id="currency-select">
+                  <option value="USD">USD</option>
+                  <option value="PHP">PHP</option>
+                  <option value="INR">INR</option>
+                  <option value="EUR">EUR</option>
+                  <option value="AUD">AUD</option>
+                  <option value="CAD">CAD</option>
+                </select>
+                <span id="grand-total" class="grand-total">-</span>
+              </div>
+
+              <p id="latency-line" class="latency-line"></p>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

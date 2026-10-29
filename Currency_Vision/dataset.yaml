@@ -1,0 +1,46 @@
+# Example YOLO dataset configuration for a detection project.
+# Update the path to match your local folder structure if needed.
+path: ./data
+train: images/train
+val: images/val
+nc: 36
+
+
+
+names:
+  0:  "50 USD"
+  1:  "5 USD"
+  2:  "1 USD"
+  3:  "10 USD"
+  4:  "20 USD"
+  5:  "100 USD"
+  6:  "100 PHP"
+  7:  "1000 PHP"
+  8:  "1000 PHP - NEW"
+  9:  "20 PHP"
+  10: "200 PHP"
+  11: "50 PHP"
+  12: "500 PHP"
+  13: "100 INR"
+  14: "10 INR"
+  15: "200 INR"
+  16: "20 INR"
+  17: "500 INR"
+  18: "50 INR"
+  19: "2000 INR"
+  20: "100 EURO"
+  21: "10 EURO"
+  22: "200 EURO"
+  23: "20 EURO"
+  24: "50 EURO"
+  25: "5 EURO"
+  26: "100 AUD"
+  27: "10 AUD"
+  28: "20 AUD"
+  29: "50 AUD"
+  30: "5 AUD"
+  31: "100 CAD"
+  32: "10 CAD"
+  33: "20 CAD"
+  34: "50 CAD"
+  35: "5 CAD"

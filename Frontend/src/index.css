@@ -1,0 +1,389 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Typography roles */
+  --font-heading: "Bricolage Grotesque", "Noto Sans Kannada", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Noto Sans Kannada", system-ui, sans-serif;
+  --font-label: "Plus Jakarta Sans", "Noto Sans Kannada", system-ui, sans-serif;
+
+  /* ------------------------------------------------------------------
+     DhanDrishti design system
+     primary   = deep emerald (trust / money)
+     accent    = warm saffron (attention / highlights)
+     secondary = warm clay (supporting)
+     background= warm cream canvas (bright, low saturation)
+     foreground= deep warm charcoal (text)
+     ------------------------------------------------------------------ */
+
+  --primary-50: 0.968 0.024 156;
+  --primary-100: 0.928 0.052 156;
+  --primary-200: 0.858 0.082 157;
+  --primary-300: 0.748 0.108 158;
+  --primary-400: 0.632 0.128 159;
+  --primary-500: 0.522 0.138 160;
+  --primary-600: 0.44 0.12 161;
+  --primary-700: 0.36 0.1 162;
+  --primary-800: 0.292 0.08 163;
+  --primary-900: 0.232 0.062 164;
+  --primary-950: 0.17 0.048 165;
+
+  --accent-50: 0.972 0.03 82;
+  --accent-100: 0.938 0.062 80;
+  --accent-200: 0.878 0.1 78;
+  --accent-300: 0.808 0.13 75;
+  --accent-400: 0.756 0.15 72;
+  --accent-500: 0.716 0.158 70;
+  --accent-600: 0.618 0.148 64;
+  --accent-700: 0.508 0.128 58;
+  --accent-800: 0.418 0.108 54;
+  --accent-900: 0.34 0.09 50;
+  --accent-950: 0.258 0.07 46;
+
+  --secondary-50: 0.966 0.016 42;
+  --secondary-100: 0.926 0.034 42;
+  --secondary-200: 0.866 0.06 41;
+  --secondary-300: 0.776 0.088 41;
+  --secondary-400: 0.678 0.104 41;
+  --secondary-500: 0.596 0.108 41;
+  --secondary-600: 0.5 0.098 41;
+  --secondary-700: 0.408 0.078 41;
+  --secondary-800: 0.328 0.062 41;
+  --secondary-900: 0.262 0.048 41;
+  --secondary-950: 0.196 0.036 41;
+
+  --background-50: 0.99 0.008 96;
+  --background-100: 0.974 0.012 93;
+  --background-200: 0.948 0.014 90;
+  --background-300: 0.9 0.015 88;
+  --background-400: 0.84 0.016 86;
+  --background-500: 0.758 0.016 84;
+  --background-600: 0.66 0.015 82;
+  --background-700: 0.548 0.014 80;
+  --background-800: 0.44 0.012 78;
+  --background-900: 0.33 0.012 76;
+  --background-950: 0.196 0.016 166;
+
+  --foreground-50: 0.982 0.004 96;
+  --foreground-100: 0.942 0.006 96;
+  --foreground-200: 0.862 0.008 96;
+  --foreground-300: 0.74 0.01 96;
+  --foreground-400: 0.6 0.012 96;
+  --foreground-500: 0.482 0.013 96;
+  --foreground-600: 0.392 0.014 96;
+  --foreground-700: 0.312 0.015 96;
+  --foreground-800: 0.248 0.016 96;
+  --foreground-900: 0.2 0.017 96;
+  --foreground-950: 0.15 0.018 96;
+}
+
+/* ------------------------------------------------------------------
+   Dark theme
+   The neutral canvas/surface + text roles invert. The brand roles
+   (primary/accent/secondary) stay saturated so the intentionally-dark
+   brand panels (hero, scanner, splash, inverse cards) keep working.
+   A few neutral utilities are remapped below because the codebase uses
+   them as "light ink" or "frost" sitting on those dark brand surfaces.
+   ------------------------------------------------------------------ */
+.dark {
+  --background-50: 0.165 0.012 166;
+  --background-100: 0.21 0.014 166;
+  --background-200: 0.27 0.016 166;
+  --background-300: 0.35 0.018 166;
+  --background-400: 0.47 0.018 166;
+  --background-500: 0.58 0.016 166;
+  --background-600: 0.68 0.014 166;
+  --background-700: 0.78 0.012 166;
+  --background-800: 0.86 0.01 166;
+  --background-900: 0.14 0.014 166;
+  --background-950: 0.115 0.014 166;
+
+  --foreground-50: 0.24 0.014 166;
+  --foreground-100: 0.32 0.014 166;
+  --foreground-200: 0.44 0.012 96;
+  --foreground-300: 0.56 0.012 96;
+  --foreground-400: 0.67 0.011 96;
+  --foreground-500: 0.75 0.01 96;
+  --foreground-600: 0.82 0.009 96;
+  --foreground-700: 0.87 0.008 96;
+  --foreground-800: 0.91 0.007 96;
+  --foreground-900: 0.95 0.006 96;
+  --foreground-950: 0.975 0.005 96;
+
+  color-scheme: dark;
+}
+
+/* Light ink sitting on intentionally-dark brand surfaces */
+.dark .text-background-50 { color: oklch(var(--foreground-950)); }
+.dark .text-background-100 { color: oklch(var(--foreground-700)); }
+.dark .text-background-200 { color: oklch(var(--foreground-500)); }
+
+/* Frost overlays on those surfaces */
+.dark .bg-background-50\/5 { background-color: oklch(var(--foreground-950) / 0.06); }
+.dark .bg-background-50\/10 { background-color: oklch(var(--foreground-950) / 0.12); }
+.dark .bg-background-50\/15 { background-color: oklch(var(--foreground-950) / 0.18); }
+.dark .bg-background-50\/20 { background-color: oklch(var(--foreground-950) / 0.22); }
+.dark .bg-background-50\/25 { background-color: oklch(var(--foreground-950) / 0.28); }
+.dark .bg-background-50\/30 { background-color: oklch(var(--foreground-950) / 0.34); }
+
+/* Hairlines / rings on those surfaces */
+.dark .border-background-50\/8 { border-color: oklch(var(--foreground-950) / 0.1); }
+.dark .border-background-50\/10 { border-color: oklch(var(--foreground-950) / 0.12); }
+.dark .border-background-50\/15 { border-color: oklch(var(--foreground-950) / 0.18); }
+.dark .border-background-50\/20 { border-color: oklch(var(--foreground-950) / 0.24); }
+.dark .ring-background-50\/15 { --tw-ring-color: oklch(var(--foreground-950) / 0.18); }
+.dark .ring-background-50\/20 { --tw-ring-color: oklch(var(--foreground-950) / 0.24); }
+
+/* Tinted brand surfaces -> deep tints, with lightened ink */
+.dark .bg-primary-50 { background-color: oklch(var(--primary-900)); }
+.dark .bg-primary-100 { background-color: oklch(var(--primary-800)); }
+.dark .bg-accent-50 { background-color: oklch(var(--accent-900)); }
+.dark .bg-accent-100 { background-color: oklch(var(--accent-800)); }
+.dark .bg-secondary-50 { background-color: oklch(var(--secondary-900)); }
+.dark .bg-secondary-100 { background-color: oklch(var(--secondary-800)); }
+
+.dark .text-primary-700,
+.dark .text-primary-800 { color: oklch(var(--primary-200)); }
+.dark .text-primary-900 { color: oklch(var(--primary-100)); }
+.dark .text-accent-700,
+.dark .text-accent-800 { color: oklch(var(--accent-200)); }
+.dark .text-accent-900 { color: oklch(var(--accent-100)); }
+.dark .text-secondary-700,
+.dark .text-secondary-800 { color: oklch(var(--secondary-200)); }
+.dark .text-secondary-900 { color: oklch(var(--secondary-100)); }
+
+.dark .border-primary-100,
+.dark .border-primary-200 { border-color: oklch(var(--primary-700)); }
+.dark .border-accent-100,
+.dark .border-accent-200 { border-color: oklch(var(--accent-700)); }
+.dark .border-accent-300 { border-color: oklch(var(--accent-600)); }
+.dark .border-secondary-100,
+.dark .border-secondary-200 { border-color: oklch(var(--secondary-700)); }
+
+.dark .ring-primary-200 { --tw-ring-color: oklch(var(--primary-700)); }
+.dark .ring-accent-200 { --tw-ring-color: oklch(var(--accent-700)); }
+.dark .ring-secondary-200 { --tw-ring-color: oklch(var(--secondary-700)); }
+
+/* Keep always-dark brand chrome legible */
+.dark .glass-pill { border-color: oklch(var(--foreground-950) / 0.22); }
+.dark .glass-dark { border-color: oklch(var(--foreground-950) / 0.14); }
+.dark .surface-dark,
+.dark .premium-card-dark { border-color: oklch(var(--foreground-950) / 0.1); }
+
+html {
+  font-family: var(--font-body);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: oklch(var(--background-50));
+  color: oklch(var(--foreground-950));
+  font-family: var(--font-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  /* ---------- App canvas ---------- */
+  .app-bg {
+    position: relative;
+    isolation: isolate;
+    background: oklch(var(--background-50));
+  }
+  .app-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(42% 34% at 92% -4%, oklch(var(--primary-500) / 0.08), transparent 60%),
+      radial-gradient(38% 30% at 2% 102%, oklch(var(--accent-500) / 0.07), transparent 62%),
+      oklch(var(--background-50));
+  }
+  .app-bg-dark {
+    background: oklch(var(--background-950));
+  }
+  .app-bg-dark::before {
+    background:
+      radial-gradient(42% 34% at 88% -6%, oklch(var(--primary-500) / 0.3), transparent 60%),
+      radial-gradient(38% 30% at 4% 104%, oklch(var(--accent-500) / 0.22), transparent 62%),
+      oklch(var(--background-950));
+  }
+
+  /* ---------- Surfaces ---------- */
+  .surface {
+    background: oklch(var(--background-50));
+    border: 1px solid oklch(var(--background-200));
+  }
+  .surface-muted {
+    background: oklch(var(--background-100));
+    border: 1px solid oklch(var(--background-200));
+  }
+  .surface-dark {
+    background: oklch(var(--background-950));
+    border: 1px solid oklch(var(--background-50) / 0.08);
+  }
+  .premium-card {
+    background: oklch(var(--background-50));
+    border: 1px solid oklch(var(--background-200));
+  }
+  .premium-card-dark {
+    background: oklch(var(--background-950));
+    border: 1px solid oklch(var(--background-50) / 0.08);
+  }
+
+  .glass {
+    background: oklch(var(--background-50) / 0.82);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid oklch(var(--background-200));
+  }
+  .glass-dark {
+    background: oklch(var(--background-950) / 0.62);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid oklch(var(--background-50) / 0.12);
+  }
+  .glass-pill {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid oklch(var(--background-50) / 0.2);
+  }
+
+  /* ---------- Gradient text ---------- */
+  .text-gradient-gold {
+    background: linear-gradient(100deg, oklch(var(--primary-300)) 0%, oklch(var(--accent-300)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-primary {
+    background: linear-gradient(100deg, oklch(var(--primary-600)) 0%, oklch(var(--primary-400)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ring-glow {
+    box-shadow: 0 0 0 1.5px oklch(var(--primary-500) / 0.55);
+  }
+
+  /* ---------- Motion ---------- */
+  .animate-scan-line { animation: scan-line 2.8s ease-in-out infinite; }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+  .animate-pulse-ring { animation: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) infinite; }
+  .animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 6s linear infinite;
+  }
+  .wave-bar {
+    transform-origin: bottom;
+    animation: wave 0.9s ease-in-out infinite;
+  }
+
+  /* ---------- High contrast mode ---------- */
+  .high-contrast {
+    --background-200: 0.9 0.016 90;
+    --background-300: 0.8 0.02 88;
+    --foreground-600: 0.28 0.02 96;
+  }
+  .high-contrast .hc-text-strong { font-weight: 800; }
+
+  /* ---------- Large text mode ---------- */
+  .large-text { font-size: 1.08rem; }
+  .large-text :is(h1, h2, h3, .text-base) { font-size: 1.2rem; }
+
+  /* ---------- Honeypot field (forms) ---------- */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes scan-line {
+  0% { top: 8%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.92); opacity: 0.55; }
+  75%, 100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+:focus-visible {
+  outline: 3px solid oklch(var(--primary-500));
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Desktop shell: the top bar owns the page title, so in-app page
+   headers collapse their title on large screens (right-side actions stay). */
+@media (min-width: 1024px) {
+  .has-desktop-topbar .page-header-title { display: none; }
+  .has-desktop-topbar .page-header { padding-top: 0.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

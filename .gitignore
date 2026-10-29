@@ -1,0 +1,10 @@
+node_modules/
+**/node_modules/
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+Frontend/out/
+Currency_Vision/dist/
+*.log
+.DS_Store

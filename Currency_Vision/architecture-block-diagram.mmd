@@ -1,0 +1,39 @@
+flowchart LR
+    UI["USER INTERFACE<br/>Login / Signup<br/>Select language<br/>View result<br/>View history"]
+
+    INPUT["CAMERA INPUT<br/>Capture banknote frame<br/>JPEG image"]
+
+    PRE["IMAGE PREPROCESSING<br/>Resize frame<br/>Normalize image<br/>Prepare tensor"]
+
+    DETECT["CURRENCY DETECTION<br/>YOLO ONNX model<br/>ONNX Runtime Node"]
+
+    RESULT["RESULT PROCESSING<br/>Currency<br/>Denomination<br/>Confidence score"]
+
+    CONVERT["CONVERSION ENGINE<br/>Live exchange rate<br/>Default target currency"]
+
+    VOICE["VOICE OUTPUT<br/>Localized announcement<br/>ElevenLabs AI voice"]
+
+    STORE["MONGODB STORAGE<br/>Users<br/>Account-specific history"]
+
+    OUTPUT["APPLICATION OUTPUT<br/>Spoken result<br/>Converted value<br/>History record"]
+
+    UI -->|Start scan| INPUT
+    INPUT -->|Captured image| PRE
+    PRE -->|Prepared frame| DETECT
+    DETECT -->|Detected currency and confidence| RESULT
+    RESULT -->|Detected amount| CONVERT
+    CONVERT -->|Converted amount| VOICE
+    RESULT -->|Save detection| STORE
+    STORE -->|History data| OUTPUT
+    VOICE -->|Audio response| OUTPUT
+    OUTPUT -->|Display and speak| UI
+
+    classDef ui fill:#dceefb,stroke:#5b7083,color:#111827;
+    classDef input fill:#e2f1e4,stroke:#5c8061,color:#111827;
+    classDef process fill:#eadcf1,stroke:#76527b,color:#111827;
+    classDef output fill:#f5ead5,stroke:#967b4d,color:#111827;
+
+    class UI,OUTPUT ui;
+    class INPUT input;
+    class PRE,DETECT,RESULT,CONVERT,VOICE process;
+    class STORE output;
